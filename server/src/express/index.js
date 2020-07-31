@@ -10,16 +10,13 @@ if(false) {
 import dotenv from 'dotenv';
 dotenv.config()
 
-import { GraphQLServer } from 'graphql-yoga';
-import ApolloEngine from 'apollo-engine';
+import { isLocalDev } from "../helpers/logging";
 import { Prisma } from '../generated/prisma';
 
 import { makeExecutableSchema } from 'graphql-tools';
 
 import { typeDefs } from '../apiSchema';
 import resolvers from '../resolvers';
-
-import { checkJwt } from './middleware/jwt';
 
 console.log('PRISMA_ENDPOINT', process.env.PRISMA_ENDPOINT);
 const prisma = new Prisma({
@@ -40,8 +37,8 @@ import { ApolloServer } from 'apollo-server-express';
 
 const server = new ApolloServer({
   schema,
-  introspection: ifLocaldev(),
-  playground: ifLocaldev(),
+  introspection: isLocalDev,
+  playground: isLocalDev,
   debug: true,
   context: req => ({
     ...req,
@@ -71,18 +68,8 @@ const httpServer = server.createHttpServer({
 
 const port = process.env.PORT ?? 5000;
 
-if (false && process.env.ENGINE_API_KEY) {
-  const engine = new ApolloEngine.ApolloEngine();
-
-  engine.listen({ port, httpServer }, () =>
-    console.log(
-      `Server with Apollo Engine is running on http://localhost:${port}`
-    )
-  );
-} else {
-  httpServer.listen({ port }, () =>
-    console.log(
-      `Server with GraphQL server is running on http://localhost:${port}`
-    )
-  );
-}
+httpServer.listen({ port }, () =>
+  console.log(
+    `Server with GraphQL server is running on http://localhost:${port}`
+  )
+);
