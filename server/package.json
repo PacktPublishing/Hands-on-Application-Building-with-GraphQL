@@ -4,9 +4,15 @@
   "description": "A GraphQL Trello server based on Prisma",
   "scripts": {
     "start:lambda": "node -r dotenv/config node_modules/.bin/netlify-lambda serve src/lambda",
-    "build": "netlify-lambda build src/lambda -c src/.webpack.config.js",
-    "start": "nodemon -e js,graphql -x babel-node -b @babel/preset-env -r dotenv/config src/express",
-    "debug": "nodemon -e js,graphql -x babel-node -b @babel/preset-env --inspect src/express",
+    "build": "netlify-lambda build src/lambda",
+    "build:express": "babel --no-babelrc --presets @babel/env -d build src",
+    "start:express": "node -r dotenv/config build/express",
+    "start": "nodemon -e js,graphql -x babel-node -r dotenv/config -b @babel/preset-env src/express",
+    "debug": "nodemon -e js,graphql -x babel-node -r dotenv/config -b @babel/preset-env --inspect src/express",
+
+    "build2": "netlify-lambda build src/lambda -c src/.webpack.config.js",
+    "start2": "nodemon -e js,graphql -x babel-node -b @babel/preset-env -r dotenv/config src/express",
+    "debug2": "nodemon -e js,graphql -x babel-node -b @babel/preset-env --inspect src/express",
     "playground": "prisma playground",
     "dev": "npm-run-all --parallel start playground"
   },
@@ -16,8 +22,9 @@
     "node": ">=12.1"
   },
   "dependencies": {
-    "@instana/aws-lambda": "1.106.2",
+    "@babel/core": "7",
     "apollo-errors": "1.9.0",
+    "apollo-server-express": "2.16.1",
     "apollo-server-lambda": "2.17.0",
     "aws-sdk": "2.758.0",
     "bcryptjs": "2.4.3",
@@ -31,13 +38,15 @@
     "webpack-node-externals": "2.5.2"
   },
   "devDependencies": {
+    "@babel/cli": "7.10.5",
     "@babel/node": "7.10.5",
+    "@babel/polyfill": "7.10.4",
     "@babel/preset-env": "7.11.5",
     "apollo-engine": "1.1.2",
+    "core-js": "3.6.5",
     "dotenv": "8.2.0",
     "express-jwt": "6.0.0",
-    "graphql-tools": "6.2.3",
-    "graphql-yoga": "1.18.3",
+    "graphql-tools": "6.0.15",
     "nodemon": "2.0.4",
     "npm-run-all": "4.1.5"
   }
