@@ -7,6 +7,7 @@
     "build": "netlify-lambda build src/lambda",
     "build:express": "babel --no-babelrc --presets @babel/env -d build src",
     "start:express": "node -r dotenv/config build/express",
+    "start:express:nonoptimized": "OPTIMIZED=false node -r dotenv/config build/express",
     "start": "nodemon -e js,graphql -x babel-node -r dotenv/config -b @babel/preset-env src/express",
     "debug": "nodemon -e js,graphql -x babel-node -r dotenv/config -b @babel/preset-env --inspect src/express",
 

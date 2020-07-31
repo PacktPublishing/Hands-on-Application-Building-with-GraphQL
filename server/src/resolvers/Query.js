@@ -1,22 +1,40 @@
-import { verifyAuth0HeaderToken, verifyUserIsAuthenticated } from './utils';
+import { getUserId, verifyAuth0HeaderToken, verifyUserIsAuthenticated } from './utils';
 import { injectUserIdByAuth0id } from '../helpers/userIdByAuth0id';
 import { createNewUser } from '../helpers/registerNewUser';
 import { isLocalDev } from '../helpers/logging';
 
 const Query = {
   async board(parent, { where }, ctx, info) {
-    await verifyUserIsAuthenticated(ctx);
+    if (process.env.OPTIMIZED == 'false') {
+      await getUserId(ctx);
+    }
+    else {
+      await verifyUserIsAuthenticated(ctx);
+    }
     const { prisma } = ctx;
     return prisma.board(where, info);
   },
 
   async list(parent, { where }, ctx, info) {
-    await verifyUserIsAuthenticated(ctx);
+    if (process.env.OPTIMIZED == 'false') {
+      await getUserId(ctx);
+    }
+    else {
+      await verifyUserIsAuthenticated(ctx);
+    }
     const { prisma } = ctx;
     return prisma.list(where, info);
   },
 
-  me: async function (parent, args, ctx) {
+  me: async function(parent, args, ctx) {
+    if (process.env.OPTIMIZED == 'false') {
+      const userId = await getUserId(ctx);
+      const { prisma } = ctx;
+      const user = await prisma.user({ id: userId });
+      return user;
+    }
+
+
     const userToken = await verifyAuth0HeaderToken(
       ctx
     );
