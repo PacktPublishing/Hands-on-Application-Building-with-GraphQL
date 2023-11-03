@@ -7,7 +7,7 @@
 
 ---
 
-**Author**: Robert Hostlowsky [on twitter: @rhosts](https://www.twitter.com/rhosts) 
+**Author**: Robert Hostlowsky [on fediverse: @lowsky](https://mastodontech.de/@lowsky)
 
 There is this **live demo** available at [https://www.coolboard.fun/](https://www.coolboard.fun/)
 
